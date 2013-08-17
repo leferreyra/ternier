@@ -1,0 +1,10 @@
+
+# Archivos de Bases de Datos
+*.db
+
+# Archivos compilados de Python
+*.pyc
+
+# Archivos de configuraciones
+settings.py
+

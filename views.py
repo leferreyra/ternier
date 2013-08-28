@@ -17,8 +17,9 @@ class MainFrame(wx.Frame):
 		self.panel = BackgroundPanel(self, -1)
 		self.panel.SetBackgroundColour("black")
 
-		self.SetTitle("Gestión")
+		self.SetTitle(u"Gestión")
 		self.Center()
+		self.Maximize()
 
 		self.initUi()
 		self.makeLayout()
@@ -78,6 +79,59 @@ class MainFrame(wx.Frame):
 
 		return menu
 
+
+
+class ObjectList(wx.Frame):
+
+
+	def __init__(self, parent=None, ID=-1):
+
+		wx.Frame.__init__(self, parent, ID, size=(900, 500))
+
+		self.panel = wx.Panel(self, -1)
+
+		self.title = "Object List"
+
+		self.initUi()
+		self.makeLayout()
+
+		self.Center()
+		self.Show()
+
+
+	def makeLayout(self):
+
+		main_sizer = wx.BoxSizer(wx.VERTICAL)
+		top_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+		top_sizer.Add(self.button_add, 0)
+		top_sizer.Add(self.button_modify, 0)
+		top_sizer.Add(self.button_delete, 0)
+		top_sizer.Add(self.ruler, 0)
+		top_sizer.Add(self.label_search, 0, wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 50)
+		top_sizer.Add(self.text_search, 0, wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
+
+		main_sizer.Add(top_sizer, 0, wx.EXPAND | wx.ALL, 10)
+		main_sizer.Add(self.list_objects, 1, wx.EXPAND)
+
+		self.panel.SetSizer(main_sizer)
+
+
+	def initUi(self):
+
+
+		self.button_add = wx.Button(self.panel, -1, label="Nuevo")
+		self.button_modify = wx.Button(self.panel, -1, label="Modificar")
+		self.button_delete = wx.Button(self.panel, -1, label="Eliminar")
+
+		self.ruler = wx.StaticLine(self.panel, -1, style=wx.LI_VERTICAL)
+
+		self.text_search = wx.TextCtrl(self.panel, -1, size=(200, -1))
+		self.label_search = wx.StaticText(self.panel, -1, label="Buscar:")
+
+		self.list_objects = wx.ListCtrl(self.panel, -1, style=wx.LC_REPORT)
+
+		self.SetTitle(self.title)
 
 
 

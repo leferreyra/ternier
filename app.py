@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import wx
-from views import MainFrame
+from views import MainFrame, ObjectList
 
 """ App main file """
 
@@ -28,20 +28,20 @@ class MainController:
 				("&Hacer Backup", "Hacer archivo de backup", self.OnBackup),
 				("&Restaurar Backup", "Restaurar datos desde un backup", self.OnRestoreBackup),
 				("", "", ""), # Add separator
-				("&Configuración...", "Opciones varias de configuración", self.OnConfig),
+				(u"&Configuración...", u"Opciones varias de configuración", self.OnConfig),
 				("", "", ""), # Add separator
-				("Salir", "Salir de la aplicación", self.OnExit),
+				("Salir", u"Salir de la aplicación", self.OnExit),
 			),
 			("&Clientes", 
 				("&Nuevo Cliente...", "Crear nuevo cliente", self.OnNewClient),
 				("", "", ""), # Add separator
-				("&Administrar clientes...", "Administración de clientes", self.OnClients),
+				("&Administrar clientes...", u"Administración de clientes", self.OnClients),
 			),
-			("&Gestión", 
-				("&Comprar/Vender...", "Realizar transacción", self.OnNewTransaction),
+			(u"&Gestión", 
+				("&Comprar/Vender...", u"Realizar transacción", self.OnNewTransaction),
 				("", "", ""), # Add separator
 				("&Administrar Stock...", "Stock de Divisas", self.OnAdminStock),
-				("C&heques...", "Salir de la aplicación", self.OnChecks),
+				("C&heques...", u"Salir de la aplicación", self.OnChecks),
 			),
 		)
 
@@ -49,8 +49,8 @@ class MainController:
 	def getToolbarData(self):
 
 		return (
-			("Nuevo cliente", "Crear nuevo cliente", "images/silver/test.png", self.OnNewClient),
-			("Administrar clientes", "Administrar clientes", "images/silver/test.png", self.OnClients),
+			("Nuevo cliente", "Crear nuevo cliente", "images/toolbar/test.png", self.OnNewClient),
+			("Administrar clientes", "Administrar clientes", "images/toolbar/test.png", self.OnClients),
 			("", "", "", None)
 		)
 
@@ -103,6 +103,10 @@ class App(wx.App):
 		self.main_controller = MainController(self, self.main_frame)
 
 		self.SetTopWindow(self.main_frame)
+
+		# Just for testing
+		self.dialog = ObjectList(self.main_frame)
+		self.dialog.Show()
 
 		return True
 

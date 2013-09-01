@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import wx
-from views import MainFrame, ObjectList
+from views import MainFrame, ObjectListFrame
 
 """ App main file """
 
@@ -76,7 +76,15 @@ class MainController:
 
 
 	def OnClients(self, event):
-		pass
+
+		try:
+			self.clients_frame.Show()
+		except:
+			self.clients_frame = ObjectListFrame(self.main_frame)
+			self.clients_frame.Show()
+
+		event.Skip()
+
 
 
 	def OnNewTransaction(self, event):
@@ -103,10 +111,6 @@ class App(wx.App):
 		self.main_controller = MainController(self, self.main_frame)
 
 		self.SetTopWindow(self.main_frame)
-
-		# Just for testing
-		self.dialog = ObjectList(self.main_frame)
-		self.dialog.Show()
 
 		return True
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import wx
+import wx.lib.mixins.listctrl as listmix
 
 """ Archivo que contiene las clases de la GUI """
 
@@ -81,7 +82,7 @@ class MainFrame(wx.Frame):
 
 
 
-class ObjectList(wx.Frame):
+class ObjectListFrame(wx.Frame):
 
 
 	def __init__(self, parent=None, ID=-1):
@@ -109,7 +110,8 @@ class ObjectList(wx.Frame):
 		top_sizer.Add(self.button_delete, 0)
 		top_sizer.Add(self.ruler, 0)
 		top_sizer.Add(self.label_search, 0, wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 50)
-		top_sizer.Add(self.text_search, 0, wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
+		top_sizer.Add(self.choice_search, 0, wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
+		top_sizer.Add(self.text_search, 0, wx.ALIGN_CENTER_VERTICAL)
 
 		main_sizer.Add(top_sizer, 0, wx.EXPAND | wx.ALL, 10)
 		main_sizer.Add(self.list_objects, 1, wx.EXPAND)
@@ -119,19 +121,33 @@ class ObjectList(wx.Frame):
 
 	def initUi(self):
 
-
 		self.button_add = wx.Button(self.panel, -1, label="Nuevo")
 		self.button_modify = wx.Button(self.panel, -1, label="Modificar")
 		self.button_delete = wx.Button(self.panel, -1, label="Eliminar")
 
 		self.ruler = wx.StaticLine(self.panel, -1, style=wx.LI_VERTICAL)
 
+		self.choice_search = wx.Choice(self.panel, -1, choices=["por Nombre"], size=(140, -1))
 		self.text_search = wx.TextCtrl(self.panel, -1, size=(200, -1))
 		self.label_search = wx.StaticText(self.panel, -1, label="Buscar:")
 
-		self.list_objects = wx.ListCtrl(self.panel, -1, style=wx.LC_REPORT)
+		self.list_objects = ListCtrl(self.panel, -1, style=wx.LC_REPORT)
+		self.list_objects.setResizeColumn(0)
 
 		self.SetTitle(self.title)
+
+
+	def setColumns(self, column_data):
+
+		for column in column_data:
+
+
+			self.list_objects.InsertColumn(
+				column_data.index(column),
+				column[0],
+				width=column[1]
+			)
+
 
 
 
@@ -194,3 +210,13 @@ class BackgroundPanel(wx.Panel):
 
 		dc.DrawBitmap(bmp, xpos, ypos)
 		dc.DrawBitmap(bmp_logo, logox, logoy)
+
+
+
+class ListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
+
+
+	def __init__(self, *args, **kwargs):
+
+		wx.ListCtrl.__init__(self, *args, **kwargs)
+		listmix.ListCtrlAutoWidthMixin.__init__(self)

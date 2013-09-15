@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import wx
-from views import MainFrame, ObjectListFrame
+from views import MainFrame 
+from controllers import ClientsController
 
 """ App main file """
 
@@ -26,7 +27,8 @@ class MainController:
 		return (
 			("&Archivo", 
 				("&Hacer Backup", "Hacer archivo de backup", self.OnBackup),
-				("&Restaurar Backup", "Restaurar datos desde un backup", self.OnRestoreBackup),
+				("&Restaurar Backup", "Restaurar datos desde un backup", 
+					self.OnRestoreBackup),
 				("", "", ""), # Add separator
 				(u"&Configuración...", u"Opciones varias de configuración", self.OnConfig),
 				("", "", ""), # Add separator
@@ -46,11 +48,18 @@ class MainController:
 		)
 
 
+	def getFrame(self):
+
+		return self.main_frame
+
+
 	def getToolbarData(self):
 
 		return (
-			("Nuevo cliente", "Crear nuevo cliente", "images/toolbar/test.png", self.OnNewClient),
-			("Administrar clientes", "Administrar clientes", "images/toolbar/test.png", self.OnClients),
+			("Nuevo cliente", "Crear nuevo cliente", 
+				"images/toolbar/test.png", self.OnNewClient),
+			("Administrar clientes", "Administrar clientes", 
+				"images/toolbar/test.png", self.OnClients),
 			("", "", "", None)
 		)
 
@@ -78,10 +87,10 @@ class MainController:
 	def OnClients(self, event):
 
 		try:
-			self.clients_frame.Show()
+			self.clients_controller.show()
 		except:
-			self.clients_frame = ObjectListFrame(self.main_frame)
-			self.clients_frame.Show()
+			self.clients_controller = ClientsController(self)
+			self.clients_controller.show()
 
 		event.Skip()
 

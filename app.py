@@ -26,25 +26,25 @@ class MainController:
 		# defining menus and it's callbacks methods
 		return (
 			("&Archivo", 
-				("&Hacer Backup", "Hacer archivo de backup", self.OnBackup),
-				("&Restaurar Backup", "Restaurar datos desde un backup", 
-					self.OnRestoreBackup),
+				# ("&Hacer Backup", "Hacer archivo de backup", self.OnBackup),
+				# ("&Restaurar Backup", "Restaurar datos desde un backup", 
+				# 	self.OnRestoreBackup),
 				("", "", ""), # Add separator
 				(u"&Configuración...", u"Opciones varias de configuración", self.OnConfig),
 				("", "", ""), # Add separator
 				("Salir", u"Salir de la aplicación", self.OnExit),
 			),
 			("&Clientes", 
-				("&Nuevo Cliente...", "Crear nuevo cliente", self.OnNewClient),
+				# ("&Nuevo Cliente...", "Crear nuevo cliente", self.OnNewClient),
 				("", "", ""), # Add separator
 				("&Administrar clientes...", u"Administración de clientes", self.OnClients),
 			),
-			(u"&Gestión", 
-				("&Comprar/Vender...", u"Realizar transacción", self.OnNewTransaction),
-				("", "", ""), # Add separator
-				("&Administrar Stock...", "Stock de Divisas", self.OnAdminStock),
-				("C&heques...", u"Salir de la aplicación", self.OnChecks),
-			),
+			# (u"&Gestión", 
+			# 	("&Comprar/Vender...", u"Realizar transacción", self.OnNewTransaction),
+			# 	("", "", ""), # Add separator
+			# 	("&Administrar Stock...", "Stock de Divisas", self.OnAdminStock),
+			# 	("C&heques...", u"Salir de la aplicación", self.OnChecks),
+			# ),
 		)
 
 

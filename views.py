@@ -91,8 +91,6 @@ class ObjectListFrame(wx.Frame):
 
 		self.panel = wx.Panel(self, -1)
 
-		self.list_idx = 0
-
 		self.initUi()
 		self.makeLayout()
 
@@ -125,9 +123,9 @@ class ObjectListFrame(wx.Frame):
 
 	def initUi(self):
 
-		self.button_add = wx.Button(self.panel, -1, label="Nuevo")
-		self.button_modify = wx.Button(self.panel, -1, label="Modificar")
-		self.button_delete = wx.Button(self.panel, -1, label="Eliminar")
+		self.button_add = wx.Button(self.panel, -1, label="&Nuevo")
+		self.button_modify = wx.Button(self.panel, -1, label="&Modificar")
+		self.button_delete = wx.Button(self.panel, -1, label="&Eliminar")
 
 		self.ruler = wx.StaticLine(self.panel, -1, style=wx.LI_VERTICAL)
 
@@ -171,15 +169,16 @@ class ObjectListFrame(wx.Frame):
 
 		row = row_data[1]
 
+		list_idx = self.list_objects.GetItemCount()
+
 		if len(row) == column_count:
 
-			itemid = self.list_objects.InsertStringItem(self.list_idx, row[0])
+			itemid = self.list_objects.InsertStringItem(list_idx, row[0])
 			self.list_objects.SetItemData(itemid, row_data[0])
 
 			for i in range(1, column_count):
-				self.list_objects.SetStringItem(self.list_idx, i, row[i])
+				self.list_objects.SetStringItem(list_idx, i, row[i])
 
-			self.list_idx += 1
 		else:
 			raise NameError("Row columns should be %d" % column_count)
 
@@ -188,6 +187,11 @@ class ObjectListFrame(wx.Frame):
 
 		for i in range(self.list_objects.GetColumnCount()):
 			self.list_objects.SetStringItem(idx, i, row_data[i])
+
+
+	def deleteRow(self, idx):
+
+		self.list_objects.DeleteItem(idx)
 
 
 	def OnCharHook(self, event):
@@ -233,6 +237,12 @@ class ClientDialog(wx.Dialog):
 
 		self.SetSizer(main_sizer)
 
+		# Set notes text field in panel 3 layout
+		notes_sizer = wx.BoxSizer(wx.VERTICAL)
+		notes_sizer.Add(self.text_notes, 1, wx.ALL | wx.EXPAND, 10)
+
+		self.panel3.SetSizer(notes_sizer)
+
 
 	def initUi(self):
 
@@ -240,9 +250,9 @@ class ClientDialog(wx.Dialog):
 		self.createNotebookPages(self.notebook)
 
 		self.button_save = wx.Button(self, wx.ID_OK, "Guardar")
-
 		self.button_close = wx.Button(self, wx.ID_CANCEL, "Cerrar")
-		self.button_close.SetDefault()
+
+		self.text_notes = wx.TextCtrl(self.panel3, style=wx.TE_MULTILINE)
 
 
 	def createNotebookPages(self, notebook):
@@ -255,7 +265,7 @@ class ClientDialog(wx.Dialog):
 		self.notebook.AddPage(self.panel2, u"Facturación")
 		self.notebook.AddPage(self.panel3, "Observaciones")
 
-		self.createPagesForms(self.panel1, self.dataFormFields())
+		self.createPagesForms()
 
 
 	def dataFormFields(self):
@@ -282,26 +292,48 @@ class ClientDialog(wx.Dialog):
 		)
 
 
-	def createPagesForms(self, panel, fields):
+	def billingFormFields(self):
 
-		self.data_form = FormGrid(panel, fields)
+		return (
+			(("limit", u'Límite Cta Cte ($)', FormGrid.TEXT_FIELD, 1), 
+				("discount", u'Descuento (%)', FormGrid.TEXT_FIELD, 1)),
+		)
+
+
+	def createPagesForms(self):
+
+		self.data_form = FormGrid(self.panel1, self.dataFormFields())
+		self.billing_form = FormGrid(self.panel2, self.billingFormFields())
 
 
 	def getControls(self):
 
-		return self.data_form.getControls()
+		d = {}
+
+		d.update(self.data_form.getControls())
+		d.update(self.billing_form.getControls())
+		d.update({'notes': self.text_notes})
+
+		return d
+
+
+	def getControl(self, key):
+
+		return self.getControls()[key]
 
 
 	def setModified(self):
 
 		self.modified = True
 		self.button_save.Enable()
+		self.button_save.SetDefault()
 
 
 	def setUnmodified(self):
 
 		self.modified = False
 		self.button_save.Disable()
+		self.button_close.SetDefault()
 
 
 	def OnText(self, event):

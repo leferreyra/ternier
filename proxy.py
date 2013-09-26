@@ -39,6 +39,50 @@ class ObjectListModel:
 		return ObjectModel(self.queryset.objects.get(pk=id))
 
 
+	def deleteObjectById(self, id):
+
+		obj = self.queryset.objects.get(pk=id)
+
+		pub.sendMessage(
+			'%s.deleted' % str(self.queryset._meta.verbose_name_plural), 
+			object_id=id
+		)
+
+		obj.delete()
+
+
+	def createObject(self, fields):
+
+		new_model = self.queryset()
+
+		for k, v in fields.iteritems():
+			setattr(new_model, k, v)
+
+		new_model.save()
+
+		new = ObjectModel(new_model)
+
+		pub.sendMessage(
+			'%s.added' % str(self.queryset._meta.verbose_name_plural), 
+			object=new
+		)
+
+		return new
+
+
+
+	def getFieldNames(self):
+
+		return self.queryset._meta.get_all_field_names()
+
+
+	def getFieldType(self, field):
+
+		return self.model._meta.get_field(field).get_internal_type()
+
+
+
+
 
 
 class ObjectModel:
@@ -74,6 +118,11 @@ class ObjectModel:
 
 		self.model.save()
 		self.objectChanged()
+
+
+	def getFieldType(self, field):
+
+		return self.model._meta.get_field(field).get_internal_type()
 
 
 	def getId(self):
